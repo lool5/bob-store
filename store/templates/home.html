@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="mb-5 text-center"
+    id="products-title">
+
+    Our Products
+
+</h1>
+
+<div class="row">
+
+    {% for product in products %}
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow">
+
+            <img src="{{ product.image.url }}"
+                 class="card-img-top"
+                 height="350"
+                 style="object-fit:cover;">
+
+            <div class="card-body">
+
+                <h3>
+                    {{ product.name }}
+                </h3>
+
+                <p>
+                    {{ product.description }}
+                </p>
+
+                <h4 class="text-success">
+                    {{ product.price }} EGP
+                </h4>
+
+                <a href="/product/{{ product.id }}/"
+                   class="btn btn-dark w-100">
+
+                    Order Now
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

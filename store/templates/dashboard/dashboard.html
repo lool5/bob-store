@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="mb-4">
+    Dashboard
+</h1>
+
+<a href="/add-product/"
+   class="btn btn-success">
+
+    Add Product
+
+</a>
+
+<a href="/orders/"
+   class="btn btn-dark">
+
+    Orders
+
+</a>
+<a href="/admin-logout/"
+   class="btn btn-danger">
+
+    Logout
+
+</a>
+
+<hr>
+
+<div class="row">
+
+{% for product in products %}
+
+<div class="col-md-4 mb-4">
+
+    <div class="card shadow">
+
+        <img src="{{ product.image.url }}"
+             class="card-img-top"
+             height="300"
+             style="object-fit:cover;">
+
+        <div class="card-body">
+
+            <h3>
+                {{ product.name }}
+            </h3>
+
+            <h4>
+                {{ product.price }} EGP
+            </h4>
+
+            <a href="/delete-product/{{ product.id }}/"
+               class="btn btn-danger w-100">
+
+                Delete
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
