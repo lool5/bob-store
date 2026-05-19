@@ -11,13 +11,15 @@
 
             <div class="card-body p-5">
 
-                <h1 class="text-center fw-bold mb-4">
+                <h1 class="text-center fw-bold mb-4"
+                    data-i18n="add_product">
 
                     Add Product
 
                 </h1>
 
-                <p class="text-center text-muted mb-5">
+                <p class="text-center text-muted mb-5"
+                   data-i18n="add_product_desc">
 
                     Add new clothing product to your store
 
@@ -30,7 +32,8 @@
 
                     <div class="mb-4">
 
-                        <label class="form-label fw-bold">
+                        <label class="form-label fw-bold"
+                               data-i18n="product_name">
 
                             Product Name
 
@@ -42,7 +45,8 @@
 
                     <div class="mb-4">
 
-                        <label class="form-label fw-bold">
+                        <label class="form-label fw-bold"
+                               data-i18n="description">
 
                             Description
 
@@ -54,7 +58,8 @@
 
                     <div class="mb-4">
 
-                        <label class="form-label fw-bold">
+                        <label class="form-label fw-bold"
+                               data-i18n="price">
 
                             Price
 
@@ -66,7 +71,8 @@
 
                     <div class="mb-4">
 
-                        <label class="form-label fw-bold">
+                        <label class="form-label fw-bold"
+                               data-i18n="product_image">
 
                             Product Image
 
@@ -76,7 +82,8 @@
 
                     </div>
 
-                    <button class="btn btn-dark btn-lg w-100">
+                    <button class="btn btn-dark btn-lg w-100"
+                            data-i18n="submit_add">
 
                         Add Product
 
@@ -91,5 +98,32 @@
     </div>
 
 </div>
+
+<!-- Add placeholder translations for form fields -->
+<script>
+    function translateFormPlaceholders() {
+        const lang = localStorage.getItem("lang") || "en";
+        const placeholders = {
+            en: {
+                name: "e.g. Classic Leather Jacket",
+                description: "Describe the product details...",
+                price: "e.g. 499"
+            },
+            ar: {
+                name: "مثال: جلد كلاسيكي",
+                description: "اكتب وصف المنتج...",
+                price: "مثال: 499"
+            }
+        };
+        const nameInput = document.querySelector('input[name="name"]');
+        const descInput = document.querySelector('textarea[name="description"]');
+        const priceInput = document.querySelector('input[name="price"]');
+        if(nameInput) nameInput.placeholder = placeholders[lang].name;
+        if(descInput) descInput.placeholder = placeholders[lang].description;
+        if(priceInput) priceInput.placeholder = placeholders[lang].price;
+    }
+    window.addEventListener('languageChanged', translateFormPlaceholders);
+    document.addEventListener('DOMContentLoaded', translateFormPlaceholders);
+</script>
 
 {% endblock %}

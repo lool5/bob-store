@@ -2,7 +2,8 @@
 
 {% block content %}
 
-<h1 class="mb-5 text-center fw-bold">
+<h1 class="mb-5 text-center fw-bold"
+    data-i18n="orders_title">
 
     Orders
 
@@ -13,25 +14,15 @@
     <table class="table table-bordered table-hover bg-white shadow">
 
         <thead class="table-dark">
-
             <tr>
-
-                <th>Product</th>
-
-                <th>Phone</th>
-
-                <th>Address</th>
-
-                <th>Size</th>
-
-                <th>Status</th>
-
-                <th>Actions</th>
-
-                <th>Date</th>
-
+                <th data-i18n="product_th">Product</th>
+                <th data-i18n="phone_th">Phone</th>
+                <th data-i18n="address_th">Address</th>
+                <th data-i18n="size_th">Size</th>
+                <th data-i18n="status_th">Status</th>
+                <th data-i18n="actions_th">Actions</th>
+                <th data-i18n="date_th">Date</th>
             </tr>
-
         </thead>
 
         <tbody>
@@ -39,8 +30,7 @@
             {% for order in orders %}
 
             <tr>
-
-                <td>
+                <td class="order-product-name" data-en="{{ order.product.name }}" data-ar="{{ order.product.name_ar|default:order.product.name }}">
                     {{ order.product.name }}
                 </td>
 
@@ -56,68 +46,46 @@
                     {{ order.size }}
                 </td>
 
-                <td>
-
+                <td class="order-status">
                     {% if order.status == 'pending' %}
-
-                        <span class="badge bg-warning text-dark">
-
-                            Under Review
-
-                        </span>
-
+                        <span class="badge bg-warning text-dark" data-i18n="status_pending">Under Review</span>
                     {% elif order.status == 'confirmed' %}
-
-                        <span class="badge bg-primary">
-
-                            Confirmed
-
-                        </span>
-
+                        <span class="badge bg-primary" data-i18n="status_confirmed">Confirmed</span>
                     {% elif order.status == 'sold' %}
-
-                        <span class="badge bg-success">
-
-                            Sold
-
-                        </span>
-
+                        <span class="badge bg-success" data-i18n="status_sold">Sold</span>
                     {% elif order.status == 'cancelled' %}
-
-                        <span class="badge bg-danger">
-
-                            Cancelled
-
-                        </span>
-
+                        <span class="badge bg-danger" data-i18n="status_cancelled">Cancelled</span>
                     {% endif %}
-
                 </td>
 
                 <td>
 
                     <a href="/update-order-status/{{ order.id }}/confirmed/"
-                       class="btn btn-sm btn-primary mb-1">
+                       class="btn btn-sm btn-primary mb-1"
+                       data-i18n="confirm_btn">
 
                         Confirm
 
                     </a>
 
                     <a href="/update-order-status/{{ order.id }}/sold/"
-                       class="btn btn-sm btn-success mb-1">
+                       class="btn btn-sm btn-success mb-1"
+                       data-i18n="sold_btn">
 
                         Sold
 
                     </a>
 
                     <a href="/update-order-status/{{ order.id }}/cancelled/"
-                       class="btn btn-sm btn-danger">
+                       class="btn btn-sm btn-danger"
+                       data-i18n="cancel_btn">
 
                         Cancel
 
                     </a>
                     <a href="/delete-order/{{ order.id }}/"
-                    class="btn btn-sm btn-dark mt-1">
+                       class="btn btn-sm btn-dark mt-1"
+                       data-i18n="delete_btn">
 
                         Delete
 
@@ -138,5 +106,18 @@
     </table>
 
 </div>
+
+<script>
+    // Translate product names in orders table
+    function translateOrderProducts() {
+        const lang = localStorage.getItem("lang") || "en";
+        document.querySelectorAll('.order-product-name').forEach(el => {
+            const text = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+            if (text) el.textContent = text;
+        });
+    }
+    window.addEventListener('languageChanged', translateOrderProducts);
+    document.addEventListener('DOMContentLoaded', translateOrderProducts);
+</script>
 
 {% endblock %}

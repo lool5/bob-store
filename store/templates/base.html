@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -307,6 +306,23 @@
                 font-size: 1.8rem;
             }
         }
+
+        /* Additional polish for form inputs */
+        input, textarea, select {
+            border-radius: 20px !important;
+            border: 1px solid #ddd;
+            padding: 12px 16px;
+            transition: all 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #FFD966;
+            box-shadow: 0 0 0 3px rgba(255,217,102,0.3);
+            outline: none;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
     </style>
     <!-- ========== END OF ADDED STYLING (original code untouched) ========== -->
 
@@ -336,7 +352,8 @@ flex-direction:column;
         
             <a href="/"
             class="btn btn-outline-light me-2"
-            id="home-btn">
+            id="home-btn"
+            data-i18n="home">
 
                 Home
 
@@ -346,7 +363,8 @@ flex-direction:column;
 
            <a href="/dashboard/"
                 class="btn btn-warning me-2"
-                id="dashboard-btn">
+                id="dashboard-btn"
+                data-i18n="dashboard">
 
                 Dashboard
 
@@ -354,7 +372,8 @@ flex-direction:column;
 
             <a href="/admin-logout/"
                 class="btn btn-danger"
-                id="logout-btn">
+                id="logout-btn"
+                data-i18n="logout">
                 Logout
 
             </a>
@@ -399,14 +418,16 @@ flex-direction:column;
     <div class="container text-center">
 
        <h2 class="fw-bold"
-            id="footer-title">
+            id="footer-title"
+            data-i18n="footer_title">
 
             WinDon Store
 
         </h2>
 
        <p class="mt-3"
-        id="footer-desc">
+        id="footer-desc"
+        data-i18n="footer_desc">
 
             Premium Clothing Brand
 
@@ -415,21 +436,24 @@ flex-direction:column;
         <div class="mt-4">
 
             <a href="#"
-               class="btn btn-success me-2">
+               class="btn btn-success me-2"
+               data-i18n="whatsapp">
 
                 WhatsApp
 
             </a>
 
             <a href="#"
-               class="btn btn-primary me-2">
+               class="btn btn-primary me-2"
+               data-i18n="facebook">
 
                 Facebook
 
             </a>
 
             <a href="#"
-               class="btn btn-dark">
+               class="btn btn-dark"
+               data-i18n="tiktok">
 
                 TikTok
 
@@ -440,116 +464,158 @@ flex-direction:column;
     </div>
 
 </footer>
+
 <script>
+// Translation dictionary for all static texts
+const translations = {
+    en: {
+        home: "Home",
+        dashboard: "Dashboard",
+        logout: "Logout",
+        footer_title: "WinDon Store",
+        footer_desc: "Premium Clothing Brand",
+        whatsapp: "WhatsApp",
+        facebook: "Facebook",
+        tiktok: "TikTok",
+        products_title: "Our Products",
+        order_now: "Order Now",
+        add_product: "Add Product",
+        product_name: "Product Name",
+        description: "Description",
+        price: "Price",
+        product_image: "Product Image",
+        submit_add: "Add Product",
+        orders_title: "Orders",
+        product_th: "Product",
+        phone_th: "Phone",
+        address_th: "Address",
+        size_th: "Size",
+        status_th: "Status",
+        actions_th: "Actions",
+        date_th: "Date",
+        status_pending: "Under Review",
+        status_confirmed: "Confirmed",
+        status_sold: "Sold",
+        status_cancelled: "Cancelled",
+        confirm_btn: "Confirm",
+        sold_btn: "Sold",
+        cancel_btn: "Cancel",
+        delete_btn: "Delete",
+        back_store: "Back To Store",
+        order_success_title: "✅ Order Sent Successfully",
+        order_success_msg: "Thank you for your order ❤️",
+        order_success_contact: "The store team will contact you soon through WhatsApp to confirm your order.",
+        login_title: "WinDon Admin",
+        login_subtitle: "Secure Dashboard Login",
+        username: "Username",
+        password: "Password",
+        login_btn: "Login"
+    },
+    ar: {
+        home: "الرئيسية",
+        dashboard: "لوحة التحكم",
+        logout: "تسجيل الخروج",
+        footer_title: "متجر ويندون",
+        footer_desc: "أفضل براند ملابس",
+        whatsapp: "واتساب",
+        facebook: "فيسبوك",
+        tiktok: "تيك توك",
+        products_title: "منتجاتنا",
+        order_now: "اطلب الآن",
+        add_product: "إضافة منتج",
+        product_name: "اسم المنتج",
+        description: "الوصف",
+        price: "السعر",
+        product_image: "صورة المنتج",
+        submit_add: "إضافة المنتج",
+        orders_title: "الطلبات",
+        product_th: "المنتج",
+        phone_th: "الهاتف",
+        address_th: "العنوان",
+        size_th: "المقاس",
+        status_th: "الحالة",
+        actions_th: "إجراءات",
+        date_th: "التاريخ",
+        status_pending: "قيد المراجعة",
+        status_confirmed: "تم التأكيد",
+        status_sold: "تم البيع",
+        status_cancelled: "ملغي",
+        confirm_btn: "تأكيد",
+        sold_btn: "تم البيع",
+        cancel_btn: "إلغاء",
+        delete_btn: "حذف",
+        back_store: "العودة للمتجر",
+        order_success_title: "✅ تم إرسال الطلب بنجاح",
+        order_success_msg: "شكراً لطلبك ❤️",
+        order_success_contact: "سيتواصل معك فريق المتجر عبر واتساب قريباً لتأكيد طلبك.",
+        login_title: "مدير ويندون",
+        login_subtitle: "دخول آمن للوحة التحكم",
+        username: "اسم المستخدم",
+        password: "كلمة المرور",
+        login_btn: "تسجيل الدخول"
+    }
+};
 
 function setArabic() {
-
     localStorage.setItem("lang", "ar");
-
     applyLanguage();
 }
 
 function setEnglish() {
-
     localStorage.setItem("lang", "en");
-
     applyLanguage();
 }
 
 function applyLanguage() {
-
     let lang = localStorage.getItem("lang");
-
-    // الاتجاه
-
-    if(lang == "ar") {
-
+    if (lang !== "ar" && lang !== "en") lang = "en";
+    
+    // Update direction
+    if (lang == "ar") {
         document.body.dir = "rtl";
-
         document.documentElement.lang = "ar";
-
+        document.body.style.fontFamily = "'Cairo', 'Inter', sans-serif";
     } else {
-
         document.body.dir = "ltr";
-
         document.documentElement.lang = "en";
+        document.body.style.fontFamily = "'Inter', 'Cairo', sans-serif";
     }
-
-    // HOME BUTTON
-
-    let homeBtn =
-    document.getElementById("home-btn");
-
-    if(homeBtn){
-
-        homeBtn.innerText =
-        lang == "ar" ? "الرئيسية" : "Home";
-    }
-
-    // DASHBOARD BUTTON
-
-    let dashboardBtn =
-    document.getElementById("dashboard-btn");
-
-    if(dashboardBtn){
-
-        dashboardBtn.innerText =
-        lang == "ar" ? "لوحة التحكم" : "Dashboard";
-    }
-
-    // LOGOUT BUTTON
-
-    let logoutBtn =
-    document.getElementById("logout-btn");
-
-    if(logoutBtn){
-
-        logoutBtn.innerText =
-        lang == "ar" ? "تسجيل الخروج" : "Logout";
-    }
-
-    // PRODUCTS TITLE
-
-    let productsTitle =
-    document.getElementById("products-title");
-
-    if(productsTitle){
-
-        productsTitle.innerText =
-        lang == "ar" ? "منتجاتنا" : "Our Products";
-    }
-
-    // FOOTER TITLE
-
-    let footerTitle =
-    document.getElementById("footer-title");
-
-    if(footerTitle){
-
-        footerTitle.innerText =
-        lang == "ar"
-        ? "متجر ويندون"
-        : "WinDon Store";
-    }
-
-    // FOOTER DESCRIPTION
-
-    let footerDesc =
-    document.getElementById("footer-desc");
-
-    if(footerDesc){
-
-        footerDesc.innerText =
-        lang == "ar"
-        ? "أفضل براند ملابس"
-        : "Premium Clothing Brand";
-    }
+    
+    // Translate all elements with data-i18n attribute
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+            // Preserve inner HTML if it contains icons? For simplicity, replace text content.
+            // But we want to keep any child elements like icons, so we'll just set textContent
+            // if no icons inside, else we can be safe and replace text only for simple nodes.
+            // For buttons that might have icons, we avoid removing icons. We'll check if there's an <i> tag.
+            if (el.querySelector('i')) {
+                // Keep icon, translate only text nodes
+                const icon = el.querySelector('i');
+                const textNode = Array.from(el.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+                if (textNode) textNode.textContent = translations[lang][key];
+            } else {
+                el.textContent = translations[lang][key];
+            }
+        }
+    });
+    
+    // Special cases for dynamically generated elements that are not covered by data-i18n (like order status badges)
+    // We will handle them via separate functions called after page loads.
+    // Also update placeholder texts if needed.
+    document.querySelectorAll('input[data-i18n-placeholder]').forEach(input => {
+        const key = input.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+            input.placeholder = translations[lang][key];
+        }
+    });
+    
+    // Fire custom event for child pages to update dynamic content (product names, etc.)
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang: lang } }));
 }
 
 window.onload = applyLanguage;
-
 </script>
-
 
 </body>
 

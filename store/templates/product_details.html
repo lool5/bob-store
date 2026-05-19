@@ -13,11 +13,11 @@
 
     <div class="col-md-6">
 
-        <h1>
+        <h1 class="product-name" data-en="{{ product.name }}" data-ar="{{ product.name_ar|default:product.name }}">
             {{ product.name }}
         </h1>
 
-        <p>
+        <p class="product-desc" data-en="{{ product.description }}" data-ar="{{ product.description_ar|default:product.description }}">
             {{ product.description }}
         </p>
 
@@ -33,7 +33,8 @@
 
             {{ form.as_p }}
 
-            <button class="btn btn-dark w-100">
+            <button class="btn btn-dark w-100"
+                    data-i18n="order_now">
 
                 Order Now
 
@@ -44,5 +45,23 @@
     </div>
 
 </div>
+
+<script>
+    function updateProductDetails() {
+        const lang = localStorage.getItem("lang") || "en";
+        const nameEl = document.querySelector('.product-name');
+        const descEl = document.querySelector('.product-desc');
+        if (nameEl) {
+            const text = lang === 'ar' ? nameEl.getAttribute('data-ar') : nameEl.getAttribute('data-en');
+            if (text) nameEl.textContent = text;
+        }
+        if (descEl) {
+            const text = lang === 'ar' ? descEl.getAttribute('data-ar') : descEl.getAttribute('data-en');
+            if (text) descEl.textContent = text;
+        }
+    }
+    window.addEventListener('languageChanged', updateProductDetails);
+    document.addEventListener('DOMContentLoaded', updateProductDetails);
+</script>
 
 {% endblock %}
