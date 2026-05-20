@@ -3,16 +3,11 @@
 {% block content %}
 
 <div class="row">
-
     <div class="col-md-6">
-
-        <img src="{{ product.image.url }}"
-             class="img-fluid rounded shadow">
-
+        <img src="{{ product.image.url }}" class="img-fluid rounded shadow">
     </div>
 
     <div class="col-md-6">
-
         <h1 class="product-name" data-en="{{ product.name }}" data-ar="{{ product.name_ar|default:product.name }}">
             {{ product.name }}
         </h1>
@@ -22,31 +17,54 @@
         </p>
 
         <h2 class="text-success">
-            {{ product.price }} EGP
+            {% if product.discount > 0 %}
+                <del class="text-muted fs-5">{{ product.price }} EGP</del><br>
+                <strong>{{ product.discounted_price|floatformat:2 }} EGP</strong>
+                <span class="badge bg-danger ms-2">-{{ product.discount }}%</span>
+            {% else %}
+                {{ product.price }} EGP
+            {% endif %}
         </h2>
 
         <hr>
 
         <form method="POST">
-
             {% csrf_token %}
 
-            {{ form.as_p }}
+            <!-- حقل رقم الهاتف مع ترجمة -->
+            <div class="mb-3">
+                <label class="form-label fw-bold" data-i18n="phone_th">Phone</label>
+                <input type="text" name="customer_phone" class="form-control" required id="customer_phone"
+                       placeholder="e.g. 0123456789" data-i18n-placeholder="phone_placeholder">
+            </div>
 
-            <button class="btn btn-dark w-100"
-                    data-i18n="order_now">
+            <!-- حقل العنوان مع ترجمة -->
+            <div class="mb-3">
+                <label class="form-label fw-bold" data-i18n="address_th">Address</label>
+                <textarea name="customer_address" class="form-control" rows="2" required id="customer_address"
+                          placeholder="e.g. Cairo, Egypt" data-i18n-placeholder="address_placeholder"></textarea>
+            </div>
 
-                Order Now
+            <!-- حقل المقاس مع ترجمة -->
+            <div class="mb-3">
+                <label class="form-label fw-bold" data-i18n="size_th">Size</label>
+                <select name="size" class="form-select" required id="size">
+                    <option value="">-- Select Size --</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
+            </div>
 
-            </button>
-
+            <button class="btn btn-dark w-100" data-i18n="order_now">Order Now</button>
         </form>
-
     </div>
-
 </div>
 
 <script>
+    // تحديث اسم المنتج ووصفه عند تغيير اللغة
     function updateProductDetails() {
         const lang = localStorage.getItem("lang") || "en";
         const nameEl = document.querySelector('.product-name');
@@ -60,8 +78,48 @@
             if (text) descEl.textContent = text;
         }
     }
-    window.addEventListener('languageChanged', updateProductDetails);
-    document.addEventListener('DOMContentLoaded', updateProductDetails);
+
+    // تحديث النصوص داخل الحقول (placeholder) عند تغيير اللغة
+    function updateFormPlaceholders() {
+        const lang = localStorage.getItem("lang") || "en";
+        const phoneInput = document.getElementById('customer_phone');
+        const addressInput = document.getElementById('customer_address');
+        const sizeSelect = document.getElementById('size');
+
+        const placeholders = {
+            en: { phone: "e.g. 0123456789", address: "e.g. Cairo, Egypt" },
+            ar: { phone: "مثال: 0123456789", address: "مثال: القاهرة، مصر" }
+        };
+
+        if (phoneInput) phoneInput.placeholder = placeholders[lang].phone;
+        if (addressInput) addressInput.placeholder = placeholders[lang].address;
+
+        // ترجمة خيارات المقاس إذا أردت (حسب اللغة)
+        if (sizeSelect) {
+            const options = sizeSelect.options;
+            if (lang === 'ar') {
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].value === '') options[i].text = '-- اختر المقاس --';
+                    else options[i].text = options[i].value; // S,M,L تبقى كما هي
+                }
+            } else {
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].value === '') options[i].text = '-- Select Size --';
+                    else options[i].text = options[i].value;
+                }
+            }
+        }
+    }
+
+    // استماع لحدث تغيير اللغة
+    window.addEventListener('languageChanged', () => {
+        updateProductDetails();
+        updateFormPlaceholders();
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        updateProductDetails();
+        updateFormPlaceholders();
+    });
 </script>
 
 {% endblock %}

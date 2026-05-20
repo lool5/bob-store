@@ -3,6 +3,19 @@ from django.db import models
 
 class Product(models.Model):
 
+    discount = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        help_text="نسبة التخفيض % (0 = لا يوجد تخفيض)"
+    )
+    @property
+    def discounted_price(self):
+        if self.discount > 0:
+            return self.price * (100 - self.discount) / 100
+        return self.price
+
+
     name = models.CharField(
         max_length=200
     )

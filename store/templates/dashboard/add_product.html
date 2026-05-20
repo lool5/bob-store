@@ -68,6 +68,15 @@
                         {{ form.price }}
 
                     </div>
+                    <!-- بعد حقل السعر -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" data-i18n="discount">
+                            Discount (%)
+                        </label>
+                        {{ form.discount }}
+                        <small class="text-muted">أدخل رقم التخفيض (0 = لا يوجد تخفيض)</small>
+                    </div>
+
 
                     <div class="mb-4">
 
@@ -107,12 +116,15 @@
             en: {
                 name: "e.g. Classic Leather Jacket",
                 description: "Describe the product details...",
-                price: "e.g. 499"
+                price: "e.g. 499",
+                discount: "Discount (%)"
             },
+            
             ar: {
                 name: "مثال: جلد كلاسيكي",
                 description: "اكتب وصف المنتج...",
-                price: "مثال: 499"
+                price: "مثال: 499",
+                discount: "التخفيض (%)"
             }
         };
         const nameInput = document.querySelector('input[name="name"]');

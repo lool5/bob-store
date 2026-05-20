@@ -35,7 +35,13 @@
             </h3>
 
             <h4 class="mt-2">
-                {{ product.price }} EGP
+                {% if product.discount > 0 %}
+                    <del class="text-muted fs-6">{{ product.price }} EGP</del><br>
+                    <strong>{{ product.discounted_price|floatformat:2 }} EGP</strong>
+                    <span class="badge bg-danger ms-2">-{{ product.discount }}%</span>
+                {% else %}
+                    {{ product.price }} EGP
+                {% endif %}
             </h4>
 
             <a href="/delete-product/{{ product.id }}/"
