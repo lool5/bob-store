@@ -1,22 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>WinDon Store</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-    
-    <!-- ========== ADDED STYLING (without any change to original structure) ========== -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Bob Clothing – Style That Speaks</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ---------- GLOBAL REFINEMENTS ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -24,112 +18,159 @@
         }
 
         body {
-            font-family: 'Inter', 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            font-family: 'Poppins', 'Cairo', system-ui, sans-serif;
+            background: #ffffff; /* خلفية بيضاء نقية */
             transition: all 0.2s ease;
+            color: #000000; /* نص أسود */
         }
 
-        /* RTL specific fine-tuning */
         body[dir="rtl"] {
-            font-family: 'Cairo', 'Inter', system-ui, sans-serif;
+            font-family: 'Cairo', 'Poppins', sans-serif;
             text-align: right;
         }
 
-        body[dir="ltr"] {
-            text-align: left;
-        }
-
-        /* custom scrollbar */
+        /* شريط التمرير بالأسود والرمادي */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #1e1e1e;
+            background: #e0e0e0;
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #FFD966;
+            background: #333333;
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #ffc107;
+            background: #000000;
         }
 
-        /* ---------- NAVBAR MAGIC (preserving bg-black but enhancing) ---------- */
-        .bg-black {
-            background: #0a0a0a !important;
-            box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,240,0.05);
-            border-bottom: 1px solid rgba(255, 217, 102, 0.25);
+        /* ========== Navbar أسود ========== */
+        .bg-custom-nav {
+            background: #000000 !important; /* خلفية سوداء */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #333333;
         }
 
         .navbar-brand {
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FFE5A3 80%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent !important;
-            text-shadow: 0 2px 3px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        .navbar-brand:hover {
-            transform: scale(1.02);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* navbar buttons (outline-light + special touches) */
-        .navbar .btn-outline-light {
+        /* اللوجو بإطار رمادي */
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #555555;
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+
+        .navbar-brand:hover .logo-img {
+            transform: scale(1.02);
+            border-color: #ffffff;
+        }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            color: #ffffff; /* نص أبيض */
+        }
+
+        /* زر القائمة للموبايل */
+        .navbar-toggler {
+            border: none;
+            background: #333333;
+            padding: 8px 12px;
+        }
+        .navbar-toggler-icon {
+            filter: invert(1);
+        }
+
+        /* روابط القائمة */
+        .navbar-nav .nav-link {
+            color: #dddddd !important;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 40px;
+            transition: all 0.2s;
+        }
+        .navbar-nav .nav-link:hover {
+            background: #333333;
+            color: #ffffff !important;
+            transform: translateY(-2px);
+        }
+
+        /* أزرار اللغة */
+        .lang-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .lang-btn-nav {
+            background: #222222;
+            border: 1px solid #555555;
+            border-radius: 40px;
+            padding: 6px 18px;
+            font-weight: 600;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+        .lang-btn-nav:hover {
+            background: #555555;
+            border-color: #aaaaaa;
+        }
+
+        /* أزرار خاصة (داشبورد، تسجيل خروج) */
+        .btn-warning-custom {
+            background: #333333;
+            border: none;
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 40px;
+            transition: all 0.2s;
+        }
+        .btn-warning-custom:hover {
+            background: #555555;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-danger-custom {
+            background: #111111;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #ffaaaa;
+        }
+        .btn-danger-custom:hover {
+            background: #333333;
+            color: #ffcccc;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-light-custom {
             border-radius: 40px;
             padding: 6px 20px;
             font-weight: 600;
-            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            border-width: 1.5px;
-            letter-spacing: 0.3px;
-        }
-        .navbar .btn-outline-light:hover {
-            background: #FFD966;
-            border-color: #FFD966;
-            color: #000000;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px -6px rgba(0,0,0,0.3);
-        }
-        .btn-warning {
-            background: #FFD966;
-            border: none;
-            font-weight: 600;
-            border-radius: 40px;
+            border: 1.5px solid #666666;
+            color: #ffffff;
+            background: transparent;
             transition: all 0.2s;
         }
-        .btn-warning:hover {
-            background: #FFC107;
+        .btn-outline-light-custom:hover {
+            background: #444444;
+            border-color: #aaaaaa;
             transform: translateY(-2px);
-            box-shadow: 0 6px 14px rgba(255, 217, 102, 0.3);
-        }
-        .btn-danger {
-            border-radius: 40px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.05);
         }
 
-        /* Language buttons (AR / EN) inside navbar */
-        nav .btn-outline-light.me-2:last-of-type,
-        nav .btn-outline-light:last-child {
-            background: rgba(255, 217, 102, 0.12);
-            border-color: rgba(255, 217, 102, 0.6);
-            color: #FFE5A3;
-        }
-        nav .btn-outline-light.me-2:last-of-type:hover,
-        nav .btn-outline-light:last-child:hover {
-            background: #FFD966;
-            color: #000;
-            border-color: #FFD966;
-        }
-
-        /* ---------- MAIN CONTENT AREA (dynamic blocks) ---------- */
-        .container.mt-5.mb-5 {
-            animation: fadeSlideUp 0.45s ease-out;
+        /* ========== المحتوى الرئيسي ========== */
+        .main-content {
+            min-height: 70vh;
+            animation: fadeSlideUp 0.4s ease-out;
         }
 
         @keyframes fadeSlideUp {
@@ -143,480 +184,282 @@
             }
         }
 
-        /* style for potential product cards, titles, or any content from backend */
-        .container.mt-5.mb-5 h1, 
-        .container.mt-5.mb-5 h2,
-        .container.mt-5.mb-5 h3 {
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            background: linear-gradient(120deg, #1e2a3a, #2c3e4e);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        body[dir="rtl"] .container.mt-5.mb-5 h1,
-        body[dir="rtl"] .container.mt-5.mb-5 h2 {
-            background: linear-gradient(120deg, #2c3e4e, #1e2a3a);
-            background-clip: text;
-            -webkit-background-clip: text;
-        }
-
-        /* elegant card styling for any .card or .product-card that might appear */
-        .card, [class*="card"] {
-            border: none;
-            border-radius: 28px;
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+        /* البطاقات - إطار رمادي وخلفية بيضاء */
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 24px;
+            background: #ffffff;
+            box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             overflow: hidden;
         }
-        .card:hover, [class*="card"]:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 30px 40px -12px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 217, 102, 0.4);
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.2);
+            border-color: #bbbbbb;
+        }
+        .card-img-top {
+            width: 100%;
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
         }
 
-        /* general buttons styling */
+        /* الأزرار العامة */
         .btn {
             border-radius: 40px;
             font-weight: 600;
-            padding: 8px 24px;
+            padding: 10px 24px;
             transition: all 0.2s;
         }
-        
-        /* improving links & interactive elements */
-        a {
-            transition: all 0.2s;
-        }
-
-        /* ---------- FOOTER ENHANCEMENTS (luxe finish) ---------- */
-        footer.bg-black {
-            background: #07090c !important;
-            border-top: 1px solid rgba(255, 217, 102, 0.25);
-            position: relative;
-            overflow: hidden;
-        }
-        footer.bg-black::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 10% 20%, rgba(255,217,102,0.03) 0%, rgba(0,0,0,0) 80%);
-            pointer-events: none;
-        }
-        footer h2 {
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFE5A3, #FFD966);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-        }
-        footer p {
-            color: #b9b9b9;
-            font-weight: 400;
-        }
-        footer .btn-success, footer .btn-primary, footer .btn-dark {
-            border-radius: 60px;
-            padding: 10px 28px;
-            font-weight: 600;
-            transition: all 0.25s;
+        .btn-primary {
+            background: #000000;
+            color: white;
             border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        footer .btn-success:hover {
-            background: #25D366;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px -10px #25D36660;
+        .btn-primary:hover {
+            background: #333333;
+            transform: translateY(-2px);
         }
-        footer .btn-primary:hover {
-            background: #1877F2;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px -10px #1877F280;
+        .btn-dark {
+            background: #111111;
+            color: white;
         }
-        footer .btn-dark:hover {
-            background: #111;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px -10px #00000080;
+        .btn-dark:hover {
+            background: #333333;
+            transform: translateY(-2px);
         }
-
-        /* RTL fine adjustments for footer and navbar */
-        body[dir="rtl"] .navbar .btn-outline-light {
-            margin-left: 6px;
-            margin-right: 0;
+        .btn-success {
+            background: #222222;
+            color: white;
         }
-        body[dir="rtl"] .me-2 {
-            margin-right: 0 !important;
-            margin-left: 0.5rem !important;
+        .btn-success:hover {
+            background: #444444;
         }
-        body[dir="rtl"] .ms-auto {
-            margin-right: auto !important;
-            margin-left: 0 !important;
+        .btn-danger {
+            background: #441111;
+            color: #ffcccc;
         }
-        body[dir="rtl"] .container.text-center {
-            text-align: center;
+        .btn-danger:hover {
+            background: #661111;
         }
 
-        /* subtle glow for active language state */
-        .btn-outline-light:active, .btn-outline-light:focus {
-            box-shadow: 0 0 0 3px rgba(255, 217, 102, 0.5);
-        }
-
-        /* make the whole page more spacious & fresh */
-        .container {
-            max-width: 1280px;
-        }
-
-        /* adding brand pattern to body background (optional elegance) */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(circle at 20% 40%, rgba(255,217,102,0.03) 2%, transparent 2.5%);
-            background-size: 35px 35px;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* better spacing for content area when no dynamic content yet */
-        .mt-5 {
-            margin-top: 3rem !important;
-        }
-        .mb-5 {
-            margin-bottom: 3rem !important;
-        }
-
-        /* responsive adjustments */
-        @media (max-width: 768px) {
-            .navbar .btn-outline-light {
-                padding: 4px 14px;
-                font-size: 0.85rem;
-            }
-            footer .btn-success, footer .btn-primary, footer .btn-dark {
-                padding: 8px 18px;
-                font-size: 0.8rem;
-            }
-            footer h2 {
-                font-size: 1.8rem;
-            }
-        }
-
-        /* Additional polish for form inputs */
+        /* الحقول */
         input, textarea, select {
             border-radius: 20px !important;
-            border: 1px solid #ddd;
+            border: 1px solid #cccccc;
             padding: 12px 16px;
             transition: all 0.2s;
+            background: #ffffff;
+            color: #000000;
         }
         input:focus, textarea:focus, select:focus {
-            border-color: #FFD966;
-            box-shadow: 0 0 0 3px rgba(255,217,102,0.3);
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
             outline: none;
         }
-        label {
-            font-weight: 600;
-            margin-bottom: 8px;
+
+        /* الفوتر */
+        footer.bg-footer {
+            background: #000000 !important;
+            border-top: 1px solid #333333;
         }
-    </style>
-    <!-- ========== END OF ADDED STYLING (original code untouched) ========== -->
+        footer .btn-social {
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        footer .btn-whatsapp { background: #25D366; color: black; } /* واتساب أخضر غامق */
+        footer .btn-whatsapp:hover { background: #128C7E; color: white; }
+        footer .btn-facebook { background: #1877F2; color: white; }
+        footer .btn-facebook:hover { background: #0e63d3; }
+        footer .btn-tiktok { background: #000000; color: white; border: 1px solid #444; }
+        footer .btn-tiktok:hover { background: #222222; }
 
-</head>
-
-<body style="
-background:#f1f1f1;
-min-height:100vh;
-display:flex;
-flex-direction:column;
-">
-
-    <!-- NAVBAR -->
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow">
-
-    <div class="container">
-
-        <a class="navbar-brand fs-3 fw-bold"
-           href="/">
-
-            WinDon
-
-        </a>
-
-        <div>
-        
-            <a href="/"
-            class="btn btn-outline-light me-2"
-            id="home-btn"
-            data-i18n="home">
-
-                Home
-
-            </a>
-
-            {% if user.is_authenticated %}
-
-           <a href="/dashboard/"
-                class="btn btn-warning me-2"
-                id="dashboard-btn"
-                data-i18n="dashboard">
-
-                Dashboard
-
-            </a>
-
-            <a href="/admin-logout/"
-                class="btn btn-danger"
-                id="logout-btn"
-                data-i18n="logout">
-                Logout
-
-            </a>
-
-            {% endif %}
-
-        </div>
-
-    </div>
-    <button onclick="setArabic()"
-        class="btn btn-outline-light me-2">
-
-    AR
-
-</button>
-
-<button onclick="setEnglish()"
-        class="btn btn-outline-light">
-
-    EN
-
-</button>
-
-</nav>
-
-
-    <!-- CONTENT -->
-
-<div class="container mt-5 mb-5">
-
-    {% block content %}
-
-    {% endblock %}
-
-</div>
-
-
-    <!-- FOOTER -->
-
-<footer class="bg-black text-white mt-auto p-5">
-
-    <div class="container text-center">
-
-       <h2 class="fw-bold"
-            id="footer-title"
-            data-i18n="footer_title">
-
-            WinDon Store
-
-        </h2>
-
-       <p class="mt-3"
-        id="footer-desc"
-        data-i18n="footer_desc">
-
-            Premium Clothing Brand
-
-        </p>
-
-        <div class="mt-4">
-
-            <a href="#"
-               class="btn btn-success me-2"
-               data-i18n="whatsapp">
-
-                WhatsApp
-
-            </a>
-
-            <a href="#"
-               class="btn btn-primary me-2"
-               data-i18n="facebook">
-
-                Facebook
-
-            </a>
-
-            <a href="#"
-               class="btn btn-dark"
-               data-i18n="tiktok">
-
-                TikTok
-
-            </a>
-
-        </div>
-
-    </div>
-
-</footer>
-
-<script>
-// Translation dictionary for all static texts
-const translations = {
-    en: {
-        home: "Home",
-        dashboard: "Dashboard",
-        logout: "Logout",
-        footer_title: "WinDon Store",
-        footer_desc: "Premium Clothing Brand",
-        whatsapp: "WhatsApp",
-        facebook: "Facebook",
-        tiktok: "TikTok",
-        products_title: "Our Products",
-        order_now: "Order Now",
-        add_product: "Add Product",
-        product_name: "Product Name",
-        description: "Description",
-        price: "Price",
-        product_image: "Product Image",
-        submit_add: "Add Product",
-        orders_title: "Orders",
-        product_th: "Product",
-        phone_th: "Phone",
-        address_th: "Address",
-        size_th: "Size",
-        status_th: "Status",
-        actions_th: "Actions",
-        date_th: "Date",
-        status_pending: "Under Review",
-        status_confirmed: "Confirmed",
-        status_sold: "Sold",
-        status_cancelled: "Cancelled",
-        confirm_btn: "Confirm",
-        sold_btn: "Sold",
-        cancel_btn: "Cancel",
-        delete_btn: "Delete",
-        back_store: "Back To Store",
-        order_success_title: "✅ Order Sent Successfully",
-        order_success_msg: "Thank you for your order ❤️",
-        order_success_contact: "The store team will contact you soon through WhatsApp to confirm your order.",
-        login_title: "WinDon Admin",
-        login_subtitle: "Secure Dashboard Login",
-        username: "Username",
-        password: "Password",
-        login_btn: "Login"
-    },
-    ar: {
-        home: "الرئيسية",
-        dashboard: "لوحة التحكم",
-        logout: "تسجيل الخروج",
-        footer_title: "متجر ويندون",
-        footer_desc: "أفضل براند ملابس",
-        whatsapp: "واتساب",
-        facebook: "فيسبوك",
-        tiktok: "تيك توك",
-        products_title: "منتجاتنا",
-        order_now: "اطلب الآن",
-        add_product: "إضافة منتج",
-        product_name: "اسم المنتج",
-        description: "الوصف",
-        price: "السعر",
-        product_image: "صورة المنتج",
-        submit_add: "إضافة المنتج",
-        orders_title: "الطلبات",
-        product_th: "المنتج",
-        phone_th: "الهاتف",
-        address_th: "العنوان",
-        size_th: "المقاس",
-        status_th: "الحالة",
-        actions_th: "إجراءات",
-        date_th: "التاريخ",
-        status_pending: "قيد المراجعة",
-        status_confirmed: "تم التأكيد",
-        status_sold: "تم البيع",
-        status_cancelled: "ملغي",
-        confirm_btn: "تأكيد",
-        sold_btn: "تم البيع",
-        cancel_btn: "إلغاء",
-        delete_btn: "حذف",
-        back_store: "العودة للمتجر",
-        order_success_title: "✅ تم إرسال الطلب بنجاح",
-        order_success_msg: "شكراً لطلبك ❤️",
-        order_success_contact: "سيتواصل معك فريق المتجر عبر واتساب قريباً لتأكيد طلبك.",
-        login_title: "مدير ويندون",
-        login_subtitle: "دخول آمن للوحة التحكم",
-        username: "اسم المستخدم",
-        password: "كلمة المرور",
-        login_btn: "تسجيل الدخول"
-    }
-};
-
-function setArabic() {
-    localStorage.setItem("lang", "ar");
-    applyLanguage();
-}
-
-function setEnglish() {
-    localStorage.setItem("lang", "en");
-    applyLanguage();
-}
-
-function applyLanguage() {
-    let lang = localStorage.getItem("lang");
-    if (lang !== "ar" && lang !== "en") lang = "en";
-    
-    // Update direction
-    if (lang == "ar") {
-        document.body.dir = "rtl";
-        document.documentElement.lang = "ar";
-        document.body.style.fontFamily = "'Cairo', 'Inter', sans-serif";
-    } else {
-        document.body.dir = "ltr";
-        document.documentElement.lang = "en";
-        document.body.style.fontFamily = "'Inter', 'Cairo', sans-serif";
-    }
-    
-    // Translate all elements with data-i18n attribute
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key]) {
-            // Preserve inner HTML if it contains icons? For simplicity, replace text content.
-            // But we want to keep any child elements like icons, so we'll just set textContent
-            // if no icons inside, else we can be safe and replace text only for simple nodes.
-            // For buttons that might have icons, we avoid removing icons. We'll check if there's an <i> tag.
-            if (el.querySelector('i')) {
-                // Keep icon, translate only text nodes
-                const icon = el.querySelector('i');
-                const textNode = Array.from(el.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
-                if (textNode) textNode.textContent = translations[lang][key];
-            } else {
-                el.textContent = translations[lang][key];
+        /* ========== التجاوب مع الموبايل ========== */
+        @media (max-width: 768px) {
+            .navbar-brand .brand-text {
+                font-size: 1.2rem;
+            }
+            .logo-img {
+                width: 40px;
+                height: 40px;
+            }
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+                white-space: normal;
+            }
+            .card-img-top {
+                height: 220px;
+            }
+            .container {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+            .dashboard-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+            .dashboard-buttons a {
+                width: 100%;
+                text-align: center;
+            }
+            .lang-group {
+                justify-content: center;
+                margin-top: 15px;
             }
         }
-    });
-    
-    // Special cases for dynamically generated elements that are not covered by data-i18n (like order status badges)
-    // We will handle them via separate functions called after page loads.
-    // Also update placeholder texts if needed.
-    document.querySelectorAll('input[data-i18n-placeholder]').forEach(input => {
-        const key = input.getAttribute('data-i18n-placeholder');
-        if (translations[lang] && translations[lang][key]) {
-            input.placeholder = translations[lang][key];
+
+        /* الجداول */
+        .table-responsive {
+            border-radius: 20px;
+            overflow-x: auto;
         }
-    });
-    
-    // Fire custom event for child pages to update dynamic content (product names, etc.)
-    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang: lang } }));
-}
+        .table {
+            border-color: #ddd;
+        }
+        .table-dark {
+            background-color: #111;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom-nav shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/logo.jpg' %}" class="logo-img" alt="Bob Logo">
+                <span class="brand-text">Bob Clothing</span>
+            </a>
 
-window.onload = applyLanguage;
-</script>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" data-i18n="home"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link btn-warning-custom text-white px-3" href="/dashboard/" data-i18n="dashboard"><i class="fas fa-chalkboard-user me-1"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn-danger-custom px-3" href="/admin-logout/" data-i18n="logout"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <div class="lang-group">
+                            <button onclick="setArabic()" class="lang-btn-nav"><i class="fas fa-language me-1"></i> AR</button>
+                            <button onclick="setEnglish()" class="lang-btn-nav"> EN</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mt-md-5 mb-5 main-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm rounded-4" role="alert">
+                    <i class="fas fa-bell me-2"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="bg-footer text-white mt-auto pt-4 pb-4">
+        <div class="container text-center">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <div class="mb-3 mb-md-0">
+                      <a class="navbar-brand" href="/">
+                <img src="{% static 'images/logo.jpg' %}" class="logo-img" alt="Bob Logo">
+                <span class="brand-text">Bob Clothing</span>
+                </a>
+                </div>
+                <p class="mb-0 text-secondary small" data-i18n="footer_desc">Premium Clothing Brand – Style That Speaks</p>
+                <div class="mt-3 mt-md-0">
+                    <a href="#" class="btn btn-social btn-whatsapp me-2" data-i18n="whatsapp"><i class="fab fa-whatsapp me-1"></i> WhatsApp</a>
+                    <a href="#" class="btn btn-social btn-facebook me-2" data-i18n="facebook"><i class="fab fa-facebook me-1"></i> Facebook</a>
+                    <a href="#" class="btn btn-social btn-tiktok" data-i18n="tiktok"><i class="fab fa-tiktok me-1"></i> TikTok</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // نفس كود الترجمة السابق (كاملاً)
+        const translations = {
+            en: {
+                home: "Home", dashboard: "Dashboard", logout: "Logout",
+                footer_title: "Bob Clothing", footer_desc: "Premium Clothing Brand – Style That Speaks",
+                whatsapp: "WhatsApp", facebook: "Facebook", tiktok: "TikTok",
+                products_title: "Our Collection", order_now: "Order Now",
+                add_product: "Add Product", product_name: "Product Name", description: "Description",
+                price: "Price", product_image: "Product Image", submit_add: "Add Product",
+                orders_title: "Orders", product_th: "Product", phone_th: "Phone",
+                address_th: "Address", size_th: "Size", status_th: "Status",
+                actions_th: "Actions", date_th: "Date", status_pending: "Under Review",
+                status_confirmed: "Confirmed", status_sold: "Sold", status_cancelled: "Cancelled",
+                confirm_btn: "Confirm", sold_btn: "Sold", cancel_btn: "Cancel", delete_btn: "Delete",
+                back_store: "Back To Store", order_success_title: "✅ Order Sent Successfully",
+                order_success_msg: "Thank you for your order ❤️",
+                order_success_contact: "Our team will contact you soon via WhatsApp.",
+                login_title: "Bob Admin", login_subtitle: "Secure Dashboard Login",
+                username: "Username", password: "Password", login_btn: "Login"
+            },
+            ar: {
+                home: "الرئيسية", dashboard: "لوحة التحكم", logout: "تسجيل الخروج",
+                footer_title: "بوب كلوثينج", footer_desc: "أفضل براند ملابس – أسلوب مميز",
+                whatsapp: "واتساب", facebook: "فيسبوك", tiktok: "تيك توك",
+                products_title: "مجموعتنا", order_now: "اطلب الآن",
+                add_product: "إضافة منتج", product_name: "اسم المنتج", description: "الوصف",
+                price: "السعر", product_image: "صورة المنتج", submit_add: "إضافة المنتج",
+                orders_title: "الطلبات", product_th: "المنتج", phone_th: "الهاتف",
+                address_th: "العنوان", size_th: "المقاس", status_th: "الحالة",
+                actions_th: "إجراءات", date_th: "التاريخ", status_pending: "قيد المراجعة",
+                status_confirmed: "تم التأكيد", status_sold: "تم البيع", status_cancelled: "ملغي",
+                confirm_btn: "تأكيد", sold_btn: "تم البيع", cancel_btn: "إلغاء", delete_btn: "حذف",
+                back_store: "العودة للمتجر", order_success_title: "✅ تم إرسال الطلب بنجاح",
+                order_success_msg: "شكراً لطلبك ❤️",
+                order_success_contact: "سيتواصل معك فريق المتجر عبر واتساب قريباً.",
+                login_title: "مدير بوب", login_subtitle: "دخول آمن للوحة التحكم",
+                username: "اسم المستخدم", password: "كلمة المرور", login_btn: "تسجيل الدخول"
+            }
+        };
+
+        function setArabic() { localStorage.setItem("lang", "ar"); applyLanguage(); }
+        function setEnglish() { localStorage.setItem("lang", "en"); applyLanguage(); }
+
+        function applyLanguage() {
+            let lang = localStorage.getItem("lang");
+            if (!["ar","en"].includes(lang)) lang = "en";
+            document.body.dir = lang === "ar" ? "rtl" : "ltr";
+            document.documentElement.lang = lang;
+            document.body.style.fontFamily = lang === "ar" ? "'Cairo', 'Poppins', sans-serif" : "'Poppins', 'Cairo', sans-serif";
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang]?.[key]) {
+                    if (el.children.length === 0 || el.children[0]?.tagName !== 'I')
+                        el.textContent = translations[lang][key];
+                    else {
+                        const textNode = Array.from(el.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+                        if (textNode) textNode.textContent = translations[lang][key];
+                    }
+                }
+            });
+            window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+        }
+        window.addEventListener('DOMContentLoaded', applyLanguage);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

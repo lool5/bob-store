@@ -75,7 +75,7 @@ def add_product(request):
         }
     )
 
-@login_required
+
 def product_details(request, id):
 
     product = Product.objects.get(id=id)
