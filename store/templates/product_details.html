@@ -3,10 +3,35 @@
 {% block content %}
 
 <div class="row">
+    <!-- معرض الصور المتعددة (Carousel) -->
     <div class="col-md-6">
-        <img src="{{ product.image.url }}" class="img-fluid rounded shadow">
+        {% if product_images %}
+            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for img in product_images %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ img.image.url }}" class="d-block w-100" style="cursor: pointer; object-fit: cover; height: 400px; border-radius: 20px;"
+                                 data-bs-toggle="modal" data-bs-target="#lightboxModal" 
+                                 data-bs-slide-to="{{ forloop.counter0 }}" onclick="openLightbox({{ forloop.counter0 }})">
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                </button>
+            </div>
+        {% else %}
+            <div class="bg-light text-center p-5 rounded shadow-sm">
+                <i class="fas fa-image fa-4x text-muted mb-3"></i>
+                <p class="text-muted">No images available for this product.</p>
+            </div>
+        {% endif %}
     </div>
 
+    <!-- معلومات المنتج ونموذج الطلب -->
     <div class="col-md-6">
         <h1 class="product-name" data-en="{{ product.name }}" data-ar="{{ product.name_ar|default:product.name }}">
             {{ product.name }}
@@ -63,6 +88,31 @@
     </div>
 </div>
 
+<!-- Modal لعرض الصورة مكبرة مع التنقل -->
+<div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body p-0">
+                <div id="lightboxCarousel" class="carousel slide" data-bs-interval="false">
+                    <div class="carousel-inner">
+                        {% for img in product_images %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ img.image.url }}" class="d-block w-100" style="max-height: 90vh; object-fit: contain;">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#lightboxCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#lightboxCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // تحديث اسم المنتج ووصفه عند تغيير اللغة
     function updateProductDetails() {
@@ -94,13 +144,12 @@
         if (phoneInput) phoneInput.placeholder = placeholders[lang].phone;
         if (addressInput) addressInput.placeholder = placeholders[lang].address;
 
-        // ترجمة خيارات المقاس إذا أردت (حسب اللغة)
         if (sizeSelect) {
             const options = sizeSelect.options;
             if (lang === 'ar') {
                 for (let i = 0; i < options.length; i++) {
                     if (options[i].value === '') options[i].text = '-- اختر المقاس --';
-                    else options[i].text = options[i].value; // S,M,L تبقى كما هي
+                    else options[i].text = options[i].value;
                 }
             } else {
                 for (let i = 0; i < options.length; i++) {
@@ -111,7 +160,18 @@
         }
     }
 
-    // استماع لحدث تغيير اللغة
+    // فتح الـ Modal وعرض الصورة المحددة
+    function openLightbox(index) {
+        const lightboxCarousel = document.querySelector('#lightboxCarousel');
+        if (lightboxCarousel) {
+            const bsCarousel = bootstrap.Carousel.getOrCreateInstance(lightboxCarousel);
+            bsCarousel.to(index);
+            const modal = new bootstrap.Modal(document.getElementById('lightboxModal'));
+            modal.show();
+        }
+    }
+
+    // ربط الأحداث
     window.addEventListener('languageChanged', () => {
         updateProductDetails();
         updateFormPlaceholders();

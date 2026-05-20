@@ -2,10 +2,7 @@
 
 {% block content %}
 
-<h1 class="mb-4"
-    data-i18n="dashboard">
-    Dashboard
-</h1>
+<h1 class="mb-4" data-i18n="dashboard">Dashboard</h1>
 
 <div class="dashboard-buttons d-flex flex-wrap gap-3 mb-4">
     <a href="/add-product/" class="btn btn-success flex-grow-1" data-i18n="add_product">Add Product</a>
@@ -16,50 +13,105 @@
 <hr>
 
 <div class="row">
-
-{% for product in products %}
-
-<div class="col-md-4 mb-4">
-
-    <div class="card shadow h-100">
-
-        <img src="{{ product.image.url }}"
-             class="card-img-top"
-             height="300"
-             style="object-fit:cover;">
-
-        <div class="card-body d-flex flex-column">
-
-            <h3 class="product-name" data-en="{{ product.name }}" data-ar="{{ product.name_ar|default:product.name }}">
-                {{ product.name }}
-            </h3>
-
-            <h4 class="mt-2">
-                {% if product.discount > 0 %}
-                    <del class="text-muted fs-6">{{ product.price }} EGP</del><br>
-                    <strong>{{ product.discounted_price|floatformat:2 }} EGP</strong>
-                    <span class="badge bg-danger ms-2">-{{ product.discount }}%</span>
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow h-100">
+            <!-- معرض الصور المصغر (Carousel) -->
+            {% with product.images.all as product_images %}
+                {% if product_images %}
+                    <div id="carousel-{{ product.id }}" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for img in product_images %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ img.image.url }}" class="d-block w-100" style="height: 300px; object-fit: cover; cursor: pointer;"
+                                     data-bs-toggle="modal" data-bs-target="#modal-{{ product.id }}" data-img-index="{{ forloop.counter0 }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ product.id }}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ product.id }}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                {% elif product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" style="height: 300px; object-fit: cover;">
                 {% else %}
-                    {{ product.price }} EGP
+                    <img src="https://via.placeholder.com/300x300?text=No+Image" class="card-img-top" style="height: 300px; object-fit: cover;">
                 {% endif %}
-            </h4>
+            {% endwith %}
 
-            <a href="/delete-product/{{ product.id }}/"
-               class="btn btn-danger w-100 mt-3"
-               data-i18n="delete_btn">
-
-                Delete
-
-            </a>
-
+            <div class="card-body d-flex flex-column">
+                <h3 class="product-name" data-en="{{ product.name }}" data-ar="{{ product.name_ar|default:product.name }}">
+                    {{ product.name }}
+                </h3>
+                <h4 class="mt-2">
+                    {% if product.discount > 0 %}
+                        <del class="text-muted fs-6">{{ product.price }} EGP</del><br>
+                        <strong>{{ product.discounted_price|floatformat:2 }} EGP</strong>
+                        <span class="badge bg-danger ms-2">-{{ product.discount }}%</span>
+                    {% else %}
+                        {{ product.price }} EGP
+                    {% endif %}
+                </h4>
+                <a href="/delete-product/{{ product.id }}/" class="btn btn-danger w-100 mt-3" data-i18n="delete_btn">Delete</a>
+            </div>
         </div>
-
     </div>
 
-</div>
+    <!-- Modal لعرض الصور مكبرة لكل منتج على حدة -->
+    {% with product.images.all as product_images %}
+        {% if product_images %}
+        <div class="modal fade" id="modal-{{ product.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-body p-0">
+                        <div id="lightboxCarousel-{{ product.id }}" class="carousel slide" data-bs-interval="false">
+                            <div class="carousel-inner">
+                                {% for img in product_images %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ img.image.url }}" class="d-block w-100" style="max-height: 90vh; object-fit: contain;">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#lightboxCarousel-{{ product.id }}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#lightboxCarousel-{{ product.id }}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-{% endfor %}
-
+        <script>
+            (function() {
+                const productId = {{ product.id }};
+                const carouselElement = document.querySelector('#carousel-' + productId);
+                if (carouselElement) {
+                    const images = carouselElement.querySelectorAll('.carousel-item img');
+                    images.forEach(img => {
+                        img.addEventListener('click', function() {
+                            const modalId = this.getAttribute('data-bs-target');
+                            const imgIndex = parseInt(this.getAttribute('data-img-index'));
+                            const modalCarousel = document.querySelector(modalId + ' .carousel');
+                            if (modalCarousel) {
+                                const bsCarousel = bootstrap.Carousel.getOrCreateInstance(modalCarousel);
+                                bsCarousel.to(imgIndex);
+                                const modal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                                modal.show();
+                            }
+                        });
+                    });
+                }
+            })();
+        </script>
+        {% endif %}
+    {% endwith %}
+    {% endfor %}
 </div>
 
 <script>

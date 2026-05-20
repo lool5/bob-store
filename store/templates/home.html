@@ -2,37 +2,46 @@
 
 {% block content %}
 
-<h1 class="mb-5 text-center"
-    id="products-title"
-    data-i18n="products_title">
-
-    Our Products
-
-</h1>
+<h1 class="mb-5 text-center" id="products-title" data-i18n="products_title">Our Products</h1>
 
 <div class="row">
-
     {% for product in products %}
-
     <div class="col-md-4 mb-4">
-
         <div class="card shadow h-100">
-
-            <img src="{{ product.image.url }}"
-                 class="card-img-top"
-                 height="350"
-                 style="object-fit:cover;">
+            <!-- معرض الصور المصغر (Carousel) -->
+            {% with product.images.all as product_images %}
+                {% if product_images %}
+                    <div id="carousel-{{ product.id }}" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for img in product_images %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ img.image.url }}" class="d-block w-100" style="height: 350px; object-fit: cover; cursor: pointer;"
+                                     data-bs-toggle="modal" data-bs-target="#modal-{{ product.id }}" data-img-index="{{ forloop.counter0 }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <!-- أزرار التنقل -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ product.id }}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ product.id }}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                {% elif product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" style="height: 350px; object-fit: cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/350x350?text=No+Image" class="card-img-top" style="height: 350px; object-fit: cover;">
+                {% endif %}
+            {% endwith %}
 
             <div class="card-body d-flex flex-column">
-
                 <h3 class="product-name" data-en="{{ product.name }}" data-ar="{{ product.name_ar|default:product.name }}">
                     {{ product.name }}
                 </h3>
-
                 <p class="product-desc flex-grow-1" data-en="{{ product.description }}" data-ar="{{ product.description_ar|default:product.description }}">
                     {{ product.description }}
                 </p>
-
                 <h4 class="text-success">
                     {% if product.discount > 0 %}
                         <del class="text-muted fs-6">{{ product.price }} EGP</del><br>
@@ -42,27 +51,61 @@
                         {{ product.price }} EGP
                     {% endif %}
                 </h4>
-
-                <a href="/product/{{ product.id }}/"
-                   class="btn btn-dark w-100 mt-3"
-                   data-i18n="order_now">
-
-                    Order Now
-
-                </a>
-
+                <a href="/product/{{ product.id }}/" class="btn btn-dark w-100 mt-3" data-i18n="order_now">Order Now</a>
             </div>
-
         </div>
-
     </div>
 
-    {% endfor %}
+    <!-- Modal لعرض الصور مكبرة لكل منتج على حدة -->
+    {% with product.images.all as product_images %}
+        {% if product_images %}
+        <div class="modal fade" id="modal-{{ product.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-body p-0">
+                        <div id="lightboxCarousel-{{ product.id }}" class="carousel slide" data-bs-interval="false">
+                            <div class="carousel-inner">
+                                {% for img in product_images %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ img.image.url }}" class="d-block w-100" style="max-height: 90vh; object-fit: contain;">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#lightboxCarousel-{{ product.id }}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#lightboxCarousel-{{ product.id }}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <script>
+            // ربط حدث النقر على الصور في الكاروسيل المصغر لفتح الـ Modal عند نفس الصورة
+            document.querySelectorAll('#carousel-{{ product.id }} .carousel-item img').forEach(img => {
+                img.addEventListener('click', function() {
+                    const modalId = this.getAttribute('data-bs-target');
+                    const imgIndex = parseInt(this.getAttribute('data-img-index'));
+                    const modalCarousel = document.querySelector(modalId + ' .carousel');
+                    if (modalCarousel) {
+                        const bsCarousel = bootstrap.Carousel.getOrCreateInstance(modalCarousel);
+                        bsCarousel.to(imgIndex);
+                        const modal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                        modal.show();
+                    }
+                });
+            });
+        </script>
+        {% endif %}
+    {% endwith %}
+    {% endfor %}
 </div>
 
 <script>
-    // Handle dynamic product name/description translation based on language
+    // تحديث النصوص عند تغيير اللغة
     function updateProductTexts() {
         const lang = localStorage.getItem("lang") || "en";
         document.querySelectorAll('.product-name').forEach(el => {
@@ -74,7 +117,6 @@
             if (text) el.textContent = text;
         });
     }
-    
     window.addEventListener('languageChanged', updateProductTexts);
     document.addEventListener('DOMContentLoaded', updateProductTexts);
 </script>

@@ -3,112 +3,69 @@
 {% block content %}
 
 <div class="row justify-content-center">
-
-    <div class="col-md-7">
-
-        <div class="card shadow-lg border-0"
-             style="border-radius:25px;">
-
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0" style="border-radius:25px;">
             <div class="card-body p-5">
-
-                <h1 class="text-center fw-bold mb-4"
-                    data-i18n="add_product">
-
-                    Add Product
-
-                </h1>
-
-                <p class="text-center text-muted mb-5"
-                   data-i18n="add_product_desc">
-
+                <h1 class="text-center fw-bold mb-4" data-i18n="add_product">Add Product</h1>
+                <p class="text-center text-muted mb-5" data-i18n="add_product_desc">
                     Add new clothing product to your store
-
                 </p>
 
-                <form method="POST"
-                      enctype="multipart/form-data">
-
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
 
+                    <!-- حقل اسم المنتج -->
                     <div class="mb-4">
-
-                        <label class="form-label fw-bold"
-                               data-i18n="product_name">
-
-                            Product Name
-
-                        </label>
-
+                        <label class="form-label fw-bold" data-i18n="product_name">Product Name</label>
                         {{ form.name }}
-
                     </div>
 
+                    <!-- حقل الوصف -->
                     <div class="mb-4">
-
-                        <label class="form-label fw-bold"
-                               data-i18n="description">
-
-                            Description
-
-                        </label>
-
+                        <label class="form-label fw-bold" data-i18n="description">Description</label>
                         {{ form.description }}
-
                     </div>
 
+                    <!-- حقل السعر -->
                     <div class="mb-4">
-
-                        <label class="form-label fw-bold"
-                               data-i18n="price">
-
-                            Price
-
-                        </label>
-
+                        <label class="form-label fw-bold" data-i18n="price">Price</label>
                         {{ form.price }}
-
                     </div>
-                    <!-- بعد حقل السعر -->
+
+                    <!-- حقل التخفيض -->
                     <div class="mb-4">
-                        <label class="form-label fw-bold" data-i18n="discount">
-                            Discount (%)
-                        </label>
+                        <label class="form-label fw-bold" data-i18n="discount">Discount (%)</label>
                         {{ form.discount }}
                         <small class="text-muted">أدخل رقم التخفيض (0 = لا يوجد تخفيض)</small>
                     </div>
 
+                    <hr>
+                    <h4 class="mt-4">📸 صور المنتج (يمكنك إضافة حتى 10 صور)</h4>
+                    
+                    <!-- إدارة الـ formset -->
+                    {{ formset.management_form }}
+                    {% for img_form in formset %}
+                        <div class="row mb-3 border p-3 rounded align-items-center">
+                            <div class="col-md-7">
+                                {{ img_form.image }}
+                                {% if img_form.image.errors %}
+                                    <div class="text-danger small">{{ img_form.image.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-5">
+                                {{ img_form.alt_text }}
+                                <small class="text-muted">نص وصفي للصورة (اختياري)</small>
+                            </div>
+                        </div>
+                    {% endfor %}
 
-                    <div class="mb-4">
-
-                        <label class="form-label fw-bold"
-                               data-i18n="product_image">
-
-                            Product Image
-
-                        </label>
-
-                        {{ form.image }}
-
-                    </div>
-
-                    <button class="btn btn-dark btn-lg w-100"
-                            data-i18n="submit_add">
-
-                        Add Product
-
-                    </button>
-
+                    <button class="btn btn-dark btn-lg w-100 mt-4" data-i18n="submit_add">Add Product</button>
                 </form>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
-<!-- Add placeholder translations for form fields -->
 <script>
     function translateFormPlaceholders() {
         const lang = localStorage.getItem("lang") || "en";
@@ -119,10 +76,9 @@
                 price: "e.g. 499",
                 discount: "Discount (%)"
             },
-            
             ar: {
-                name: "مثال: جلد كلاسيكي",
-                description: "اكتب وصف المنتج...",
+                name: "مثال: جاكيت جلد كلاسيكي",
+                description: "اكتب وصف المنتج بالتفصيل...",
                 price: "مثال: 499",
                 discount: "التخفيض (%)"
             }
@@ -130,10 +86,13 @@
         const nameInput = document.querySelector('input[name="name"]');
         const descInput = document.querySelector('textarea[name="description"]');
         const priceInput = document.querySelector('input[name="price"]');
-        if(nameInput) nameInput.placeholder = placeholders[lang].name;
-        if(descInput) descInput.placeholder = placeholders[lang].description;
-        if(priceInput) priceInput.placeholder = placeholders[lang].price;
+        const discountInput = document.querySelector('input[name="discount"]');
+        if (nameInput) nameInput.placeholder = placeholders[lang].name;
+        if (descInput) descInput.placeholder = placeholders[lang].description;
+        if (priceInput) priceInput.placeholder = placeholders[lang].price;
+        if (discountInput) discountInput.placeholder = placeholders[lang].discount;
     }
+
     window.addEventListener('languageChanged', translateFormPlaceholders);
     document.addEventListener('DOMContentLoaded', translateFormPlaceholders);
 </script>

@@ -98,3 +98,15 @@ class Order(models.Model):
     def __str__(self):
 
         return self.customer_phone
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='products/')
+    alt_text = models.CharField(max_length=200, blank=True, help_text="نص بديل للصورة")
+    order = models.PositiveIntegerField(default=0, help_text="ترتيب الصورة (الأصغر أولاً)")
+
+    class Meta:
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return f"صورة لـ {self.product.name}"
